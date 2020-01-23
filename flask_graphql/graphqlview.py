@@ -1,4 +1,5 @@
 from functools import partial
+import asyncio
 
 from flask import Response, request
 from flask.views import View
@@ -44,9 +45,6 @@ class GraphQLView(View):
     def get_middleware(self):
         return self.middleware
 
-    def get_backend(self):
-        return self.backend
-
     def get_executor(self):
         return self.executor
 
@@ -86,11 +84,10 @@ class GraphQLView(View):
                 query_data=request.args,
                 batch_enabled=self.batch,
                 catch=catch,
-                backend=self.get_backend(),
 
                 # Execute options
-                root=self.get_root_value(),
-                context=self.get_context(),
+                root_value=self.get_root_value(),
+                context_value=self.get_context(),
                 middleware=self.get_middleware(),
                 **extra_options
             )
